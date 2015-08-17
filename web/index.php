@@ -3,7 +3,11 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
+
+date_default_timezone_set('America/Montreal');
 $app['debug'] = true;
+
+$app->register(new Binfo\Silex\MobileDetectServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
 	'twig.path' => __DIR__ . '/views',
@@ -38,13 +42,13 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 			'label' => '您',
 			'required' => true
 		))
+	//todo:range
 		->add('quality', 'text', array(
 			'label' => '来几套',
 			'required' => true
 		))
-		->add('spicy', 'checkbox', array('label' => '要辣子的', 'required' => true))
-		->add('onion', 'checkbox', array('label' => '要放葱的', 'required' => true))
-		->add('remark', 'text', array(
+
+		->add('remark', 'textarea', array(
 			'required' => false
 		))
 		->add('submit', 'submit', array('label' => '订上'))
@@ -57,22 +61,22 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 
 		$app['db']->beginTransaction();
 
+		$now =  new \Datetime();
 		try {
 			//insert into results
 			$app['db']->insert('jianbingguozi', array(
 				'`name`' => $data['name'],
 				'`quality`' => $data['quality'],
-				'`spicy`' => $data['spicy'],
-				'`onion`' => $data['onion'],
 				'`remark`' => $data['remark'],
+				'`order_time`' => $now,
 			), array(
 				PDO::PARAM_STR,
 				PDO::PARAM_STR,
 				PDO::PARAM_STR,
-				PDO::PARAM_INT,
-				PDO::PARAM_STR
+				'datetime'
 			));
-			$message = " 成功订购";
+			$app['db']->commit();
+			$message = " 恭喜恭喜，您已经在".$now->format("Y-m-d H:i")."成功订上了".$data['quality']."套煎饼果子";
 		} catch (\Exception $e) {
 			$app['db']->rollback();
 			$message = " Error: ". $e->getMessage();
