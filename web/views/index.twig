@@ -1,0 +1,59 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
+<meta content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0" name="viewport" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+
+<link rel="stylesheet" href="../css/pagestyle.css" type="text/css">
+<header>
+</header>
+
+<div class="message">
+{{ message }}
+</div>
+
+<div class="form-order">
+{{ form_start(form) }}
+
+	{{ form_errors(form) }}
+
+	<div>
+		{{ form_label(form.name) }}
+		{{ form_errors(form.name) }}
+		{{ form_widget(form.name) }}
+	</div>
+
+	<div>
+		{{ form_label(form.quality) }}
+		{{ form_errors(form.quality) }}
+		{{ form_widget(form.quality) }}
+	</div>
+
+	<div>
+		{{ form_label(form.spicy) }}
+		{{ form_errors(form.spicy) }}
+		{{ form_widget(form.spicy) }}
+	</div>
+
+	<div>
+		{{ form_label(form.onion) }}
+		{{ form_errors(form.onion) }}
+		{{ form_widget(form.onion) }}
+	</div>
+
+	<div>
+		{{ form_label(form.remark) }}
+		{{ form_errors(form.remark) }}
+		{{ form_widget(form.remark) }}
+	</div>
+
+	<div>
+		{{ form_widget(form.submit) }}
+	</div>
+
+{{ form_end(form) }}
+</div>
+
+<div class="history">
+
+</div>

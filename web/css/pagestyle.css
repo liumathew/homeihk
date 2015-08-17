@@ -1,0 +1,51 @@
+body{
+	background-image: url("../images/bg.jpg");
+	font-size: 14px;
+	font-family: 'Open Sans',sans-serif;
+	color: #130802;
+	line-height: 1.5;
+}
+
+header{
+	background-color: #d42a2a;
+	height: 20px;
+}
+
+.form-order{
+	width:450px;
+	padding:30px;
+	margin:40px auto;
+	background: #FFF;
+	border-radius: 10px;
+	-webkit-border-radius:10px;
+	-moz-border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+}
+
+.form-order input[type="text"],
+.form-order input[type="date"],
+.form-order input[type="datetime"],
+.form-order input[type="email"],
+.form-order input[type="number"],
+.form-order input[type="search"],
+.form-order input[type="time"],
+.form-order input[type="url"],
+.form-order input[type="password"],
+.form-order textarea,
+.form-order select {
+	/*display: block;*/
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	/*width: 100%;*/
+	padding: 8px;
+	border-radius: 6px;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border: 2px solid #ffffdd;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
