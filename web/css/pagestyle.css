@@ -12,7 +12,7 @@ header{
 }
 
 .form-order{
-	width:450px;
+	width:auto;
 	padding:30px;
 	margin:40px auto;
 	background: #FFF;
@@ -51,4 +51,9 @@ header{
 .form-order textarea{
 	width: 100%;
 	display: block;
+}
+
+#pick_time_date select{
+	pointer-events: none;
+	background-color: #dddddd;
 }

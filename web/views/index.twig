@@ -24,9 +24,21 @@
 	</div>
 
 	<div>
+		{{ form_label(form.tel) }}
+		{{ form_errors(form.tel) }}
+		{{ form_widget(form.tel) }}
+	</div>
+
+	<div>
 		{{ form_label(form.quality) }}
 		{{ form_errors(form.quality) }}
 		{{ form_widget(form.quality) }}
+	</div>
+
+	<div>
+		{{ form_label(form.pick_time) }}
+		{{ form_errors(form.pick_time) }}
+		{{ form_widget(form.pick_time) }}
 	</div>
 
 	<div>
