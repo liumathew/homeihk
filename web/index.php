@@ -32,9 +32,27 @@ $app->register(new Silex\Provider\TranslationServiceProvider(), array(
 
 $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
 
-	$data = array('pick_time'=>new \Datetime());
+	$rows = null;
+	$message = null;
+
+	$data = array();
 	$data = array_merge($data, $request->query->all());
-$now=new \Datetime();
+
+	$datetime = new \Datetime();
+
+	if(array_key_exists('name',$data) && !empty($data['name'])){
+		try{
+			$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
+			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
+			$stmt = $app['db']->prepare($sql);
+			$stmt->bindValue(':name', $data['name']);
+			$stmt->execute();
+			$rows = $stmt->fetchAll();
+		} catch (\Exception $e) {
+			$message = " Error: ". $e->getMessage();
+	}
+	}
+
 	/** @var Symfony\Component\Form\Form $form */
 	$form = $app['form.factory']->createNamedBuilder(null, 'form', $data, array('csrf_protection' => false))
 		->setAction('/')
@@ -47,13 +65,13 @@ $now=new \Datetime();
 			'required' => true
 		))
 	//todo:range
-		->add('quality', 'text', array(
+		->add('quality', 'number', array(
 			'label' => '来几套',
 			'required' => true
 		))
 
 		->add('pick_time', 'datetime', array(
-			'data' => $now->modify('next Sunday 10:00:00'),
+			'data' => $datetime->modify('next Sunday 10:00:00'),
 			'hours'=> array(9,10,11,12,1,2,3,4,5),
 			'minutes'=> array(00,15,30,45),
 			'format' => 'yyyy-MM-dd',
@@ -80,13 +98,17 @@ $now=new \Datetime();
 			//insert into results
 			$app['db']->insert('jianbingguozi', array(
 				'`name`' => $data['name'],
+				'`tel`'=> $data['tel'],
 				'`quality`' => $data['quality'],
 				'`remark`' => $data['remark'],
+				'`pick_time`' => $data['pick_time'],
 				'`order_time`' => $now,
 			), array(
 				PDO::PARAM_STR,
 				PDO::PARAM_STR,
 				PDO::PARAM_STR,
+				PDO::PARAM_STR,
+				'datetime',
 				'datetime'
 			));
 			$app['db']->commit();
@@ -97,6 +119,7 @@ $now=new \Datetime();
 		}
 
 		return $app['twig']->render('index.twig', array(
+			'rows'=> $rows,
 			'form' => $form->createView(),
 			'message' => $message
 		));
@@ -104,9 +127,23 @@ $now=new \Datetime();
 
 	// display the form
 	return $app['twig']->render('index.twig', array(
+		'rows'=> $rows,
 		'form' => $form->createView(),
-		'message'=> null
+		'message'=> $message
 	));
+});
+
+$app->match('/delete/{id}/{name}', function ($id, $name) use ($app) {
+	try{
+		$app['db']->delete('jianbingguozi', array(
+			'id' => $id,
+		));
+	}catch (\Exception $e){
+		return $app->redirect('/?name='.$name.'&message=出错了');
+	}
+
+	return $app->redirect('/?name='.$name);
+
 });
 
 $app->run();

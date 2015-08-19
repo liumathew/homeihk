@@ -54,6 +54,29 @@
 {{ form_end(form) }}
 </div>
 
+{% if rows is not null %}
 <div class="history">
+	本周你的预定情况:
+	<table>
+		<tr>
+			<th>下订单日期</th>
+			<th>套</th>
+			<th>取煎饼时间</th>
+			<th>备注</th>
+			<th></th>
 
+		</tr>
+		{% for row in rows %}
+			<tr>
+				<td>{{ row.order_time }}</a></td>
+				<td>{{ row.quality }}</td>
+				<td>{{ row.pick_time }}</td>
+				<td>{{ row.remark }}</td>
+				<td><a onclick="return confirm('确定取消这次订购?');"  type="button" href="/delete/{{ row.id }}/{{ row.name }}" >取消</a></td>
+			</tr>
+
+		{% endfor %}
+
+	</table>
 </div>
+{% endif %}
