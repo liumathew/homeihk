@@ -40,19 +40,6 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 
 	$datetime = new \Datetime();
 
-	if(array_key_exists('name',$data) && !empty($data['name'])){
-		try{
-			$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
-			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
-			$stmt = $app['db']->prepare($sql);
-			$stmt->bindValue(':name', $data['name']);
-			$stmt->execute();
-			$rows = $stmt->fetchAll();
-		} catch (\Exception $e) {
-			$message = " Error: ". $e->getMessage();
-	}
-	}
-
 	/** @var Symfony\Component\Form\Form $form */
 	$form = $app['form.factory']->createNamedBuilder(null, 'form', $data, array('csrf_protection' => false))
 		->setAction('/')
@@ -118,11 +105,19 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 			$message = " Error: ". $e->getMessage();
 		}
 
-		return $app['twig']->render('index.twig', array(
-			'rows'=> $rows,
-			'form' => $form->createView(),
-			'message' => $message
-		));
+	}
+
+	if(array_key_exists('name',$data) && !empty($data['name'])){
+		try{
+			$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
+			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
+			$stmt = $app['db']->prepare($sql);
+			$stmt->bindValue(':name', $data['name']);
+			$stmt->execute();
+			$rows = $stmt->fetchAll();
+		} catch (\Exception $e) {
+			$message = " Error: ". $e->getMessage();
+		}
 	}
 
 	// display the form
