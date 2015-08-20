@@ -11,7 +11,7 @@ header{
 	height: 20px;
 }
 
-.form-order{
+.form-order {
 	width:auto;
 	padding:30px;
 	margin:40px auto;
@@ -22,6 +22,26 @@ header{
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+}
+
+.info {
+	width:auto;
+	padding:30px;
+	margin:40px auto;
+	background: #FFF;
+	border-radius: 10px;
+	-webkit-border-radius:10px;
+	-moz-border-radius: 10px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+}
+
+.info table{
+	border:#ccc 1px solid;
+}
+.info table tr,td,th{
+	border:2px solid #ffffdd;
 }
 
 /*.form-order label{*/
@@ -53,7 +73,15 @@ header{
 	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 }
-
+#name{
+	width: 140px;
+}
+#tel{
+	width: 170px;
+}
+#quality{
+	width:	155px;
+}
 .form-order textarea{
 	width: 100%;
 	display: block;

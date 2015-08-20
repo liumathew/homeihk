@@ -34,6 +34,7 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 
 	$rows = null;
 	$message = null;
+	$reserve = null;
 
 	$data = array();
 	$data = array_merge($data, $request->query->all());
@@ -44,7 +45,7 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 	$form = $app['form.factory']->createNamedBuilder(null, 'form', $data, array('csrf_protection' => false))
 		->setAction('/')
 		->add('name', 'text', array(
-			'label' => '您(微信名)',
+			'label' => '您的称呼',
 			'required' => true
 		))
 		->add('tel', 'text', array(
@@ -109,6 +110,14 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 
 	if(array_key_exists('name',$data) && !empty($data['name'])){
 		try{
+
+			$sqlCount = 'SELECT Sum(quality) FROM jianbingguozi WHERE order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
+			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
+			$stmtCount = $app['db']->prepare($sqlCount);
+			$stmtCount->bindValue(':name', $data['name']);
+			$stmtCount->execute();
+			$reserve = $stmtCount->fetchColumn();
+
 			$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
 			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
 			$stmt = $app['db']->prepare($sql);
@@ -123,6 +132,7 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 	// display the form
 	return $app['twig']->render('index.twig', array(
 		'rows'=> $rows,
+		'reserve'=> $reserve,
 		'form' => $form->createView(),
 		'message'=> $message
 	));
