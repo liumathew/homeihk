@@ -61,6 +61,27 @@
 		{{ form_widget(form.pick_time) }}
 	</div>
 
+	<div class="people">
+		{% if queues is not null %}
+			<table>
+				<tr>
+					<th>取煎饼时间</th>
+					<th>已排队人数</th>
+				</tr>
+				{% for queue in queues %}
+					<tr>
+						<td>{{ queue.pick_time |date('H:i:s') }}</a></td>
+						<td>{{ queue.people }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+			<div class="reserve">
+				本周团购已定{{ reserve }}套
+			</div>
+
+		{% endif %}
+	</div>
+
 	<div>
 		{{ form_label(form.remark) }}
 		{{ form_errors(form.remark) }}
@@ -69,7 +90,7 @@
 
 	<div>
 		{{ form_widget(form.submit) }}
-		<button onclick="check();">输入您的称呼查看预定情况</button>
+		<!--button onclick="check();">输入您的称呼查看预定情况</button>-->
 	</div>
 
 {{ form_end(form) }}
@@ -78,9 +99,6 @@
 
 {% if rows is not null %}
 <div class="info">
-<div class="reserve">
-	本周团购已定{{ reserve }}套
-</div>
 
 <div class="history">
 	您的预定情况:

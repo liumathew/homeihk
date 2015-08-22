@@ -32,6 +32,7 @@ $app->register(new Silex\Provider\TranslationServiceProvider(), array(
 
 $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
 
+	$queues = null;
 	$rows = null;
 	$message = null;
 	$reserve = null;
@@ -100,37 +101,43 @@ $app->match('/', function (Symfony\Component\HttpFoundation\Request $request) us
 				'datetime'
 			));
 			$app['db']->commit();
-			$message = " 恭喜恭喜，您已经在".$now->format("Y-m-d H:i")."成功订上了".$data['quality']."套煎饼果子";
+			$message = " 恭喜恭喜，感谢您已经在".$now->format("Y-m-d H:i")."成功订上了".$data['quality']."套煎饼果子";
 		} catch (\Exception $e) {
 			$app['db']->rollback();
 			$message = " Error: ". $e->getMessage();
 		}
 
 	}
-
-	if(array_key_exists('name',$data) && !empty($data['name'])){
 		try{
 
 			$sqlCount = 'SELECT Sum(quality) FROM jianbingguozi WHERE order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
 			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
 			$stmtCount = $app['db']->prepare($sqlCount);
-			$stmtCount->bindValue(':name', $data['name']);
 			$stmtCount->execute();
 			$reserve = $stmtCount->fetchColumn();
 
-			$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
+			$sql = 'SELECT pick_time, sum(quality) as people FROM `jianbingguozi` WHERE order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'" GROUP BY pick_time ';
 			/** @var \Doctrine\DBAL\Driver\Statement $stmt */
 			$stmt = $app['db']->prepare($sql);
-			$stmt->bindValue(':name', $data['name']);
 			$stmt->execute();
-			$rows = $stmt->fetchAll();
+			$queues = $stmt->fetchAll();
+
+			if(array_key_exists('name',$data) && !empty($data['name'])){
+				$sql = 'SELECT * FROM jianbingguozi WHERE name=:name AND order_time> "'.date("Y-m-d H:i:s", strtotime('last Sunday')).'"';
+				/** @var \Doctrine\DBAL\Driver\Statement $stmt */
+				$stmt = $app['db']->prepare($sql);
+				$stmt->bindValue(':name', $data['name']);
+				$stmt->execute();
+				$rows = $stmt->fetchAll();
+			}
 		} catch (\Exception $e) {
 			$message = " Error: ". $e->getMessage();
 		}
-	}
+
 
 	// display the form
 	return $app['twig']->render('index.twig', array(
+		'queues' =>$queues,
 		'rows'=> $rows,
 		'reserve'=> $reserve,
 		'form' => $form->createView(),
